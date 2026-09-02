@@ -45,7 +45,7 @@ body {
 
 .mobile-container {
   width: 100%;
-  max-width: 480px;
+  max-width: 820px;
   height: 100vh;
   max-height: 100vh;
   background-color: #000000;
@@ -53,15 +53,15 @@ body {
   flex-direction: column;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 0 50px rgba(0, 0, 0, 0.9);
+  box-shadow: 0 0 60px rgba(0, 0, 0, 0.95);
 }
 
 @media (min-width: 500px) {
   .mobile-container {
-    height: 92vh;
-    max-height: 850px;
-    border-radius: 40px;
-    border: 10px solid #1c1c1e;
+    height: 90vh;
+    max-height: 920px;
+    border-radius: 36px;
+    border: 14px solid #1c1c1e;
   }
 }
 
@@ -150,9 +150,7 @@ body {
   transform: scale(1);
 }
 
-/* ==========================================================================
-   1. SEÇÃO RELÓGIO DIGITAL
-   ========================================================================== */
+/* 1. SEÇÃO RELÓGIO DIGITAL */
 #section-clock {
   justify-content: center;
   align-items: center;
@@ -165,17 +163,56 @@ body {
   justify-content: center;
   text-align: center;
   width: 100%;
+  flex: 1;
+  overflow-y: auto;
+  gap: 16px;
+  padding: 10px 0;
+}
+
+.clock-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: rgba(18, 18, 20, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 20px;
+  padding: 18px 14px;
+  transition: all 0.3s ease;
+}
+
+.clock-card.single {
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+/* Título do Fuso Horário (exibido apenas quando mais de 1 fuso selecionado) */
+.clock-tz-title {
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--orange-bright);
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  text-shadow: 0 0 10px rgba(255, 140, 0, 0.4);
 }
 
 .digital-clock-time {
   font-family: var(--font-digital);
-  font-size: 3.5rem;
+  font-size: 4rem;
   font-weight: 800;
   color: var(--text-white);
   letter-spacing: 2px;
   text-shadow: 0 0 30px rgba(255, 255, 255, 0.3);
   line-height: 1.1;
-  margin-bottom: 20px;
+  margin-bottom: 12px;
+}
+
+.clock-card.multi .digital-clock-time {
+  font-size: 2.2rem;
+  margin-bottom: 6px;
 }
 
 .digital-clock-date {
@@ -183,13 +220,33 @@ body {
   font-weight: 400;
   color: var(--text-muted);
   letter-spacing: 0.5px;
-  margin-bottom: 40px;
   text-transform: capitalize;
 }
 
-.clock-controls {
+.clock-card.multi .digital-clock-date {
+  font-size: 0.85rem;
+}
+
+/* Barra Superior do Relógio (Canto Superior Direito) */
+.clock-top-bar {
   display: flex;
-  gap: 12px;
+  justify-content: flex-end;
+  align-items: center;
+  width: 100%;
+  margin-bottom: 10px;
+  position: relative;
+  z-index: 40;
+}
+
+/* Controles Inferiores do Relógio (Em baixo no Centro) */
+.clock-bottom-controls {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 15px;
+  width: 100%;
 }
 
 .chip-btn {
@@ -212,9 +269,77 @@ body {
   box-shadow: 0 0 12px rgba(255, 107, 0, 0.3);
 }
 
-/* ==========================================================================
-   2. SEÇÃO CRONÔMETRO
-   ========================================================================== */
+/* Dropdown de Fusos Horários */
+.tz-dropdown-wrapper {
+  position: relative;
+}
+
+.tz-dropdown-menu {
+  position: absolute;
+  top: 110%;
+  right: 0;
+  width: 210px;
+  background: rgba(18, 18, 20, 0.95);
+  backdrop-filter: blur(15px);
+  border: 1px solid var(--orange-primary);
+  border-radius: 16px;
+  padding: 12px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 107, 0, 0.3);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  z-index: 50;
+  text-align: left;
+}
+
+.tz-dropdown-menu.hidden {
+  display: none;
+}
+
+.tz-dropdown-header {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: var(--text-muted);
+  padding-bottom: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  margin-bottom: 4px;
+}
+
+.tz-dropdown-list {
+  max-height: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.tz-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.85rem;
+  color: var(--text-white);
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 8px;
+  transition: background 0.2s;
+}
+
+.tz-option:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.tz-option input[type="checkbox"] {
+  accent-color: var(--orange-bright);
+  width: 16px;
+  height: 16px;
+  cursor: pointer;
+}
+
+/* 2. SEÇÃO CRONÔMETRO*/
+
 .stopwatch-container {
   display: flex;
   flex-direction: column;
@@ -443,9 +568,8 @@ body {
   box-shadow: 0 0 10px rgba(255, 107, 0, 0.2);
 }
 
-/* ==========================================================================
-   3. SEÇÃO ALARME
-   ========================================================================== */
+/* 3. SEÇÃO ALARME*/
+
 .alarm-container {
   display: flex;
   flex-direction: column;
@@ -497,14 +621,91 @@ body {
   transition: border-color 0.2s;
 }
 
-.input-group input[type="time"] {
+.input-group input[type="time"],
+.input-group input[type="date"] {
   font-family: var(--font-digital);
-  font-size: 1.1rem;
+  font-size: 0.95rem;
 }
 
-.input-group input:focus {
+.input-group select.tz-select {
+  background: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: var(--text-white);
+  padding: 10px 10px;
+  border-radius: 12px;
+  font-family: var(--font-sans);
+  font-size: 0.8rem;
+  outline: none;
+  transition: border-color 0.2s;
+  cursor: pointer;
+}
+
+.input-group select.tz-select option {
+  background: #121214;
+  color: #ffffff;
+}
+
+.input-group input:focus,
+.input-group select.tz-select:focus {
   border-color: var(--orange-bright);
   box-shadow: 0 0 10px rgba(255, 140, 0, 0.3);
+}
+
+.btn-gcal {
+  background: linear-gradient(135deg, #1a73e8, #4285f4);
+  color: #ffffff;
+  border: none;
+  border-radius: 12px;
+  padding: 6px 12px;
+  font-size: 0.75rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(66, 133, 244, 0.3);
+  text-decoration: none;
+}
+
+.btn-gcal:hover {
+  background: linear-gradient(135deg, #1557b0, #1a73e8);
+  box-shadow: 0 6px 16px rgba(66, 133, 244, 0.5);
+  transform: translateY(-1px);
+}
+
+/* Badges e Horários de Múltiplos Fusos nos Alarmes */
+.alarm-multi-tz-wrapper {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 6px;
+}
+
+.alarm-tz-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 140, 0, 0.12);
+  border: 1px solid rgba(255, 140, 0, 0.3);
+  padding: 4px 8px;
+  border-radius: 8px;
+  font-size: 0.78rem;
+}
+
+.alarm-tz-name {
+  color: var(--orange-bright);
+  font-weight: 700;
+  text-transform: uppercase;
+  font-size: 0.7rem;
+  letter-spacing: 0.5px;
+}
+
+.alarm-tz-time {
+  font-family: var(--font-digital);
+  color: var(--text-white);
+  font-weight: 700;
+  font-size: 0.9rem;
 }
 
 .btn-primary-orange {
@@ -631,10 +832,7 @@ input:checked+.slider:before {
   opacity: 1;
 }
 
-/* ==========================================================================
-   BARRA DE ALTERAÇÃO / NAVEGAÇÃO INFERIOR
-   * Requisito: "coloque uma sombra laranja na opção selecionada na barra de alteração"
-   ========================================================================== */
+/* BARRA DE ALTERAÇÃO / NAVEGAÇÃO INFERIOR */
 .bottom-nav {
   height: var(--nav-height);
   background-color: #0a0a0c;
@@ -693,9 +891,7 @@ input:checked+.slider:before {
   text-shadow: 0 0 8px rgba(255, 140, 0, 0.5);
 }
 
-/* ==========================================================================
-   MODAL SOBREPOSTO DE ALARME
-   ========================================================================== */
+/* MODAL SOBREPOSTO DE ALARME*/
 .alarm-modal-backdrop {
   position: absolute;
   top: 0;
