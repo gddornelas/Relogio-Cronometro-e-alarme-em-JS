@@ -1,222 +1,291 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
+    />
+    <meta name="theme-color" content="#000000" />
+    <title>Relógio Digital Mobile</title>
+    <!-- Google Fonts para UI Digital & Moderna -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Outfit:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="index.css" />
+  </head>
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#000000">
-  <title>Relógio Digital Mobile</title>
-  <!-- Google Fonts para UI Digital & Moderna -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link
-    href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Outfit:wght@300;400;500;600;700&display=swap"
-    rel="stylesheet">
-  <link rel="stylesheet" href="index.css">
-</head>
-
-<body>
-  <!-- Container Principal (invólucro de emulação de viewport mobile) -->
-  <div class="mobile-container">
-
-    <!-- Barra de Status Superior / Cabeçalho -->
-    <header class="app-header">
-      <div class="header-brand">
-        <span class="status-dot"></span>
-        <span id="app-status-text">DIGITAL CLOCK JS</span>
-      </div>
-      <div class="header-right">
-        <span id="current-period-badge" class="badge">24H</span>
-      </div>
-    </header>
-
-    <!-- Container Principal de Telas de Conteúdo -->
-    <main class="content-viewport">
-
-      <!-- SECTION 1: RELÓGIO DIGITAL -->
-      <section id="section-clock" class="app-section active">
-        <!-- Canto Superior Direito: Seletor de Fusos Horários -->
-        <div class="clock-top-bar">
-          <div class="tz-dropdown-wrapper">
-            <button id="toggle-tz-btn" class="chip-btn">🌐 Fusos ▾</button>
-            <div id="tz-dropdown-menu" class="tz-dropdown-menu hidden">
-              <div class="tz-dropdown-header">Escolher Fusos</div>
-              <div id="tz-dropdown-list" class="tz-dropdown-list"></div>
-            </div>
-          </div>
+  <body>
+    <!-- Container Principal (invólucro de emulação de viewport mobile) -->
+    <div class="mobile-container">
+      <!-- Barra de Status Superior / Cabeçalho -->
+      <header class="app-header">
+        <div class="header-brand">
+          <span class="status-dot"></span>
+          <span id="app-status-text">DIGITAL CLOCK JS</span>
         </div>
-
-        <!-- Display Principal do Relógio -->
-        <div class="clock-display-container" id="clock-display-container">
-          <div class="digital-clock-time" id="clock-time">00:00:00</div>
-          <div class="digital-clock-date" id="clock-date">Carregando data...</div>
+        <div class="header-right">
+          <span id="current-period-badge" class="badge">24H</span>
         </div>
+      </header>
 
-        <!-- Abaixo no Centro: Alternadores de Segundos e Formato 12h/24h -->
-        <div class="clock-bottom-controls">
-          <button id="toggle-seconds-btn" class="chip-btn active">Mostrar Segundos</button>
-          <button id="toggle-format-btn" class="chip-btn">Modo 12h / 24h</button>
-        </div>
-      </section>
-
-      <!-- SECTION 2: CRONÔMETRO -->
-      <section id="section-stopwatch" class="app-section">
-        <div class="stopwatch-container">
-          <!-- Display do Contador do Cronômetro -->
-          <div class="stopwatch-display-wrapper">
-            <div class="stopwatch-time" id="sw-display">00:00:00</div>
-            <div class="stopwatch-status-label" id="sw-status-label">PRONTO</div>
-          </div>
-
-          <!-- Botões de Ação do Cronômetro -->
-          <div class="stopwatch-actions">
-            <!-- Botão Esquerdo: Inicia como Iniciar / Parar (vermelho) / Finalizar -->
-            <button id="btn-sw-primary" class="btn-sw btn-start">
-              <span class="btn-icon">▶</span>
-              <span class="btn-text">Iniciar</span>
-            </button>
-
-            <!-- Botão Direito: Inicia como Imprimir / Continuar -->
-            <button id="btn-sw-secondary" class="btn-sw btn-print" disabled>
-              <span class="btn-icon">📸</span>
-              <span class="btn-text">Imprimir</span>
-            </button>
-          </div>
-
-          <!-- Lista de Histórico Impresso -->
-          <div class="stopwatch-history-panel">
-            <div class="history-header">
-              <span class="history-title">Histórico de Prints</span>
-              <span class="history-count" id="history-count">0 marcas</span>
-            </div>
-
-            <div class="history-list-wrapper">
-              <ul id="sw-history-list" class="history-list">
-                <li class="history-empty">Nenhum valor impresso ainda.<br>Pressione <strong
-                    style="color: #ff8c00;">Imprimir</strong> durante a contagem.</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- SECTION 3: ALARME -->
-      <section id="section-alarm" class="app-section">
-        <div class="alarm-container">
-
-          <!-- Cartão de Adicionar Alarme -->
-          <div class="alarm-card add-alarm-card">
-            <h3 class="card-title">Novo Alarme</h3>
-            <form id="form-add-alarm" class="alarm-form">
-              <div class="form-row">
-                <div class="input-group">
-                  <label for="alarm-time-input">Horário</label>
-                  <input type="time" id="alarm-time-input" required value="08:00">
-                </div>
-                <div class="input-group">
-                  <label for="alarm-date-input">Data</label>
-                  <input type="date" id="alarm-date-input">
-                </div>
+      <!-- Container Principal de Telas de Conteúdo -->
+      <main class="content-viewport">
+        <!-- SECTION 1: RELÓGIO DIGITAL -->
+        <section id="section-clock" class="app-section active">
+          <!-- Canto Superior Direito: Seletor de Fusos Horários -->
+          <div class="clock-top-bar">
+            <div class="tz-dropdown-wrapper">
+              <button id="toggle-tz-btn" class="chip-btn">🌐 Fusos ▾</button>
+              <div id="tz-dropdown-menu" class="tz-dropdown-menu hidden">
+                <div class="tz-dropdown-header">Escolher Fusos</div>
+                <div id="tz-dropdown-list" class="tz-dropdown-list"></div>
               </div>
-              <div class="form-row">
-                <div class="input-group">
-                  <label>Fusos Horários</label>
-                  <div class="tz-dropdown-wrapper">
-                    <button type="button" id="alarm-toggle-tz-btn" class="chip-btn" style="width: 100%; justify-content: space-between;">
-                      <span>🌐 Fusos ▾</span>
-                    </button>
-                    <div id="alarm-tz-dropdown-menu" class="tz-dropdown-menu hidden" style="width: 100%; left: 0; top: 110%;">
-                      <div class="tz-dropdown-header">Escolher Fusos</div>
-                      <div id="alarm-tz-dropdown-list" class="tz-dropdown-list"></div>
-                    </div>
+            </div>
+          </div>
+
+          <!-- Display Principal do Relógio -->
+          <div class="clock-display-container" id="clock-display-container">
+            <div class="digital-clock-time" id="clock-time">00:00:00</div>
+            <div class="digital-clock-date" id="clock-date">
+              Carregando data...
+            </div>
+          </div>
+
+          <!-- Abaixo no Centro: Alternadores de Segundos e Formato 12h/24h -->
+          <div class="clock-bottom-controls">
+            <button id="toggle-seconds-btn" class="chip-btn active">
+              Mostrar Segundos
+            </button>
+            <button id="toggle-format-btn" class="chip-btn">
+              Modo 12h / 24h
+            </button>
+          </div>
+        </section>
+
+        <!-- SECTION 2: CRONÔMETRO -->
+        <section id="section-stopwatch" class="app-section">
+          <div class="stopwatch-container">
+            <!-- Display do Contador do Cronômetro -->
+            <div class="stopwatch-display-wrapper">
+              <div class="stopwatch-time" id="sw-display">00:00:00</div>
+              <div class="stopwatch-status-label" id="sw-status-label">
+                PRONTO
+              </div>
+            </div>
+
+            <!-- Botões de Ação do Cronômetro -->
+            <div class="stopwatch-actions">
+              <!-- Botão Esquerdo: Inicia como Iniciar / Parar (vermelho) / Finalizar -->
+              <button id="btn-sw-primary" class="btn-sw btn-start">
+                <span class="btn-icon">▶</span>
+                <span class="btn-text">Iniciar</span>
+              </button>
+
+              <!-- Botão Direito: Inicia como Imprimir / Continuar -->
+              <button id="btn-sw-secondary" class="btn-sw btn-print" disabled>
+                <span class="btn-icon">📸</span>
+                <span class="btn-text">Imprimir</span>
+              </button>
+            </div>
+
+            <!-- Lista de Histórico Impresso -->
+            <div class="stopwatch-history-panel">
+              <div class="history-header">
+                <span class="history-title">Histórico de Prints</span>
+                <span class="history-count" id="history-count">0 marcas</span>
+              </div>
+
+              <div class="history-list-wrapper">
+                <ul id="sw-history-list" class="history-list">
+                  <li class="history-empty">
+                    Nenhum valor impresso ainda.<br />Pressione
+                    <strong style="color: #ff8c00">Imprimir</strong> durante a
+                    contagem.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- SECTION 3: ALARME -->
+        <section id="section-alarm" class="app-section">
+          <div class="alarm-container">
+            <!-- Cartão de Adicionar Alarme -->
+            <div class="alarm-card add-alarm-card">
+              <h3 class="card-title">Novo Alarme</h3>
+              <form id="form-add-alarm" class="alarm-form">
+                <div class="form-row">
+                  <div class="input-group">
+                    <label for="alarm-time-input">Horário</label>
+                    <input
+                      type="time"
+                      id="alarm-time-input"
+                      required
+                      value="08:00"
+                    />
+                  </div>
+                  <div class="input-group">
+                    <label for="alarm-date-input">Data</label>
+                    <input type="date" id="alarm-date-input" />
                   </div>
                 </div>
-                <div class="input-group">
-                  <label for="alarm-label-input">Descrição</label>
-                  <input type="text" id="alarm-label-input" placeholder="Ex: Reunião, Remédio" maxlength="25">
+                <div class="form-row">
+                  <div class="input-group">
+                    <label>Fusos Horários</label>
+                    <div class="tz-dropdown-wrapper">
+                      <button
+                        type="button"
+                        id="alarm-toggle-tz-btn"
+                        class="chip-btn"
+                        style="width: 100%; justify-content: space-between"
+                      >
+                        <span>🌐 Fusos ▾</span>
+                      </button>
+                      <div
+                        id="alarm-tz-dropdown-menu"
+                        class="tz-dropdown-menu hidden"
+                        style="width: 100%; left: 0; top: 110%"
+                      >
+                        <div class="tz-dropdown-header">Escolher Fusos</div>
+                        <div
+                          id="alarm-tz-dropdown-list"
+                          class="tz-dropdown-list"
+                        ></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="input-group">
+                    <label for="alarm-label-input">Descrição</label>
+                    <input
+                      type="text"
+                      id="alarm-label-input"
+                      placeholder="Ex: Reunião, Remédio"
+                      maxlength="25"
+                    />
+                  </div>
                 </div>
+                <button type="submit" class="btn-primary-orange">
+                  <span>+</span> Adicionar Alarme
+                </button>
+              </form>
+            </div>
+
+            <!-- Lista de Alarmes Ativos -->
+            <div class="alarm-card alarms-list-card">
+              <div class="history-header">
+                <h3 class="card-title">Meus Alarmes</h3>
+                <span id="alarm-count-badge" class="history-count"
+                  >0 ativos</span
+                >
               </div>
-              <button type="submit" class="btn-primary-orange">
-                <span>+</span> Adicionar Alarme
-              </button>
-            </form>
-          </div>
 
-          <!-- Lista de Alarmes Ativos -->
-          <div class="alarm-card alarms-list-card">
-            <div class="history-header">
-              <h3 class="card-title">Meus Alarmes</h3>
-              <span id="alarm-count-badge" class="history-count">0 ativos</span>
-            </div>
-
-            <div id="alarms-list" class="alarms-list">
-              <div class="alarms-empty">Nenhum alarme programado.</div>
+              <div id="alarms-list" class="alarms-list">
+                <div class="alarms-empty">Nenhum alarme programado.</div>
+              </div>
             </div>
           </div>
+        </section>
+      </main>
 
+      <!-- Bottom Navigation Bar (Barra de Alteração com Sombra Laranja) -->
+      <nav class="bottom-nav">
+        <button
+          class="nav-item active"
+          data-target="section-clock"
+          id="tab-clock"
+        >
+          <div class="nav-icon">
+            <svg
+              viewBox="0 0 24 24"
+              width="24"
+              height="24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="12" r="10"></circle>
+              <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+          </div>
+          <span class="nav-label">Relógio</span>
+        </button>
+
+        <button
+          class="nav-item"
+          data-target="section-stopwatch"
+          id="tab-stopwatch"
+        >
+          <div class="nav-icon">
+            <svg
+              viewBox="0 0 24 24"
+              width="24"
+              height="24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <circle cx="12" cy="13" r="8"></circle>
+              <path d="M12 9v4l2 2"></path>
+              <path d="M5 3L2 6"></path>
+              <path d="M22 6l-3-3"></path>
+              <path d="M12 2v3"></path>
+            </svg>
+          </div>
+          <span class="nav-label">Cronômetro</span>
+        </button>
+
+        <button class="nav-item" data-target="section-alarm" id="tab-alarm">
+          <div class="nav-icon">
+            <svg
+              viewBox="0 0 24 24"
+              width="24"
+              height="24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+              <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+            </svg>
+          </div>
+          <span class="nav-label">Alarme</span>
+        </button>
+      </nav>
+    </div>
+
+    <!-- Modal / Diálogo de Alarme Disparado -->
+    <div id="alarm-modal" class="alarm-modal-backdrop hidden">
+      <div class="alarm-modal-content">
+        <div class="alarm-pulse-ring">🔔</div>
+        <h2 class="alarm-modal-title">ALARME DISPARADO!</h2>
+        <div id="modal-alarm-time" class="alarm-modal-time">00:00</div>
+        <p id="modal-alarm-label" class="alarm-modal-label">
+          Descrição do Alarme
+        </p>
+
+        <div class="alarm-modal-actions">
+          <button id="btn-alarm-snooze" class="btn-modal btn-snooze">
+            Adiar 5 min
+          </button>
+          <button id="btn-alarm-dismiss" class="btn-modal btn-dismiss">
+            Desligar
+          </button>
         </div>
-      </section>
-
-    </main>
-
-    <!-- Bottom Navigation Bar (Barra de Alteração com Sombra Laranja) -->
-    <nav class="bottom-nav">
-      <button class="nav-item active" data-target="section-clock" id="tab-clock">
-        <div class="nav-icon">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="12" r="10"></circle>
-            <polyline points="12 6 12 12 16 14"></polyline>
-          </svg>
-        </div>
-        <span class="nav-label">Relógio</span>
-      </button>
-
-      <button class="nav-item" data-target="section-stopwatch" id="tab-stopwatch">
-        <div class="nav-icon">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <circle cx="12" cy="13" r="8"></circle>
-            <path d="M12 9v4l2 2"></path>
-            <path d="M5 3L2 6"></path>
-            <path d="M22 6l-3-3"></path>
-            <path d="M12 2v3"></path>
-          </svg>
-        </div>
-        <span class="nav-label">Cronômetro</span>
-      </button>
-
-      <button class="nav-item" data-target="section-alarm" id="tab-alarm">
-        <div class="nav-icon">
-          <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2"
-            stroke-linecap="round" stroke-linejoin="round">
-            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
-            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
-          </svg>
-        </div>
-        <span class="nav-label">Alarme</span>
-      </button>
-    </nav>
-
-  </div>
-
-  <!-- Modal / Diálogo de Alarme Disparado -->
-  <div id="alarm-modal" class="alarm-modal-backdrop hidden">
-    <div class="alarm-modal-content">
-      <div class="alarm-pulse-ring">🔔</div>
-      <h2 class="alarm-modal-title">ALARME DISPARADO!</h2>
-      <div id="modal-alarm-time" class="alarm-modal-time">00:00</div>
-      <p id="modal-alarm-label" class="alarm-modal-label">Descrição do Alarme</p>
-
-      <div class="alarm-modal-actions">
-        <button id="btn-alarm-snooze" class="btn-modal btn-snooze">Adiar 5 min</button>
-        <button id="btn-alarm-dismiss" class="btn-modal btn-dismiss">Desligar</button>
       </div>
     </div>
-  </div>
 
-  <!-- Aplicação Principal em JavaScript -->
-  <script src="index.js" defer></script>
-</body>
-
+    <!-- Aplicação Principal em JavaScript -->
+    <script src="index.js" defer></script>
+  </body>
 </html>

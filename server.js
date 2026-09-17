@@ -1,63 +1,65 @@
-const express = require('express');
-const cors = require('cors');
-const path = require('path');
-const fs = require('fs');
+const express = require("express");
+const cors = require("cors");
+const path = require("path");
+const fs = require("fs");
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json());
-app.use(express.static(path.join(__dirname, 'public')));
+app.use(express.static(path.join(__dirname, "public")));
 
 // Banco de dados simples persistente em arquivo ou fallback em memória
-const DATA_FILE = path.join(__dirname, 'data.json');
+const DATA_FILE = path.join(__dirname, "data.json");
 
 let db = {
   alarms: [
-    { id: '1', time: '07:00', label: 'Despertar Matinal', active: false },
-    { id: '2', time: '12:30', label: 'Horário do Almoço', active: true }
+    { id: "1", time: "07:00", label: "Despertar Matinal", active: false },
+    { id: "2", time: "12:30", label: "Horário do Almoço", active: true },
   ],
-  stopwatchHistory: []
+  stopwatchHistory: [],
 };
 
 // Carrega os dados se o arquivo existir
 if (fs.existsSync(DATA_FILE)) {
   try {
-    const raw = fs.readFileSync(DATA_FILE, 'utf8');
+    const raw = fs.readFileSync(DATA_FILE, "utf8");
     db = JSON.parse(raw);
   } catch (err) {
-    console.error('Erro ao ler data.json:', err.message);
+    console.error("Erro ao ler data.json:", err.message);
   }
 }
 
 function saveData() {
   try {
-    fs.writeFileSync(DATA_FILE, JSON.stringify(db, null, 2), 'utf8');
+    fs.writeFileSync(DATA_FILE, JSON.stringify(db, null, 2), "utf8");
   } catch (err) {
-    console.error('Erro ao salvar data.json:', err.message);
+    console.error("Erro ao salvar data.json:", err.message);
   }
 }
 
 // Rotas da API REST
 
 // GET Alarmes
-app.get('/api/alarms', (req, res) => {
+app.get("/api/alarms", (req, res) => {
   res.json({ success: true, alarms: db.alarms });
 });
 
 // POST Novo Alarme
-app.post('/api/alarms', (req, res) => {
+app.post("/api/alarms", (req, res) => {
   const { time, label } = req.body;
   if (!time) {
-    return res.status(400).json({ success: false, message: 'Horário é obrigatório' });
+    return res
+      .status(400)
+      .json({ success: false, message: "Horário é obrigatório" });
   }
 
   const newAlarm = {
     id: Date.now().toString(),
     time: time.trim(),
-    label: (label && label.trim()) ? label.trim() : 'Alarme Sem Título',
-    active: true
+    label: label && label.trim() ? label.trim() : "Alarme Sem Título",
+    active: true,
   };
 
   db.alarms.push(newAlarm);
@@ -67,14 +69,16 @@ app.post('/api/alarms', (req, res) => {
 });
 
 // PATCH Alternar Estado do Alarme
-app.patch('/api/alarms/:id', (req, res) => {
+app.patch("/api/alarms/:id", (req, res) => {
   const { id } = req.params;
-  const alarm = db.alarms.find(a => a.id === id);
+  const alarm = db.alarms.find((a) => a.id === id);
   if (!alarm) {
-    return res.status(404).json({ success: false, message: 'Alarme não encontrado' });
+    return res
+      .status(404)
+      .json({ success: false, message: "Alarme não encontrado" });
   }
 
-  if (typeof req.body.active === 'boolean') {
+  if (typeof req.body.active === "boolean") {
     alarm.active = req.body.active;
   } else {
     alarm.active = !alarm.active;
@@ -85,11 +89,13 @@ app.patch('/api/alarms/:id', (req, res) => {
 });
 
 // DELETE Alarme
-app.delete('/api/alarms/:id', (req, res) => {
+app.delete("/api/alarms/:id", (req, res) => {
   const { id } = req.params;
-  const index = db.alarms.findIndex(a => a.id === id);
+  const index = db.alarms.findIndex((a) => a.id === id);
   if (index === -1) {
-    return res.status(404).json({ success: false, message: 'Alarme não encontrado' });
+    return res
+      .status(404)
+      .json({ success: false, message: "Alarme não encontrado" });
   }
 
   const deleted = db.alarms.splice(index, 1)[0];
@@ -98,23 +104,25 @@ app.delete('/api/alarms/:id', (req, res) => {
 });
 
 // GET Histórico do Cronômetro
-app.get('/api/history', (req, res) => {
+app.get("/api/history", (req, res) => {
   res.json({ success: true, history: db.stopwatchHistory });
 });
 
 // POST Salvar Sessão do Cronômetro
-app.post('/api/history', (req, res) => {
+app.post("/api/history", (req, res) => {
   const { sessionName, duration, laps } = req.body;
   if (!laps || !Array.isArray(laps)) {
-    return res.status(400).json({ success: false, message: 'Formato inválido de histórico' });
+    return res
+      .status(400)
+      .json({ success: false, message: "Formato inválido de histórico" });
   }
 
   const record = {
     id: Date.now().toString(),
     date: new Date().toISOString(),
     sessionName: sessionName || `Sessão #${db.stopwatchHistory.length + 1}`,
-    totalDuration: duration || '00:00.00',
-    laps
+    totalDuration: duration || "00:00.00",
+    laps,
   };
 
   db.stopwatchHistory.unshift(record);
@@ -128,24 +136,24 @@ app.post('/api/history', (req, res) => {
 });
 
 // DELETE Limpar Histórico
-app.delete('/api/history', (req, res) => {
+app.delete("/api/history", (req, res) => {
   db.stopwatchHistory = [];
   saveData();
-  res.json({ success: true, message: 'Histórico limpo' });
+  res.json({ success: true, message: "Histórico limpo" });
 });
 
 // Endpoint de verificação de status (Health Check)
-app.get('/api/status', (req, res) => {
+app.get("/api/status", (req, res) => {
   res.json({
-    status: 'online',
+    status: "online",
     serverTime: new Date().toISOString(),
-    uptime: process.uptime()
+    uptime: process.uptime(),
   });
 });
 
 // Rota de fallback para aplicação de página única (SPA)
-app.get('*', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
 app.listen(PORT, () => {

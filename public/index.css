@@ -12,8 +12,8 @@
   --green-accent: #30d158;
   --blue-accent: #0a84ff;
 
-  --font-digital: 'Orbitron', monospace, sans-serif;
-  --font-sans: 'Outfit', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-digital: "Orbitron", monospace, sans-serif;
+  --font-sans: "Outfit", -apple-system, BlinkMacSystemFont, sans-serif;
 
   --nav-height: 72px;
 }
@@ -98,7 +98,6 @@ body {
 }
 
 @keyframes pulse-dot {
-
   0%,
   100% {
     opacity: 0.4;
@@ -138,7 +137,10 @@ body {
   opacity: 0;
   visibility: hidden;
   transform: scale(0.98);
-  transition: opacity 0.3s ease, transform 0.3s ease, visibility 0.3s;
+  transition:
+    opacity 0.3s ease,
+    transform 0.3s ease,
+    visibility 0.3s;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
@@ -284,7 +286,9 @@ body {
   border: 1px solid var(--orange-primary);
   border-radius: 16px;
   padding: 12px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 107, 0, 0.3);
+  box-shadow:
+    0 10px 30px rgba(0, 0, 0, 0.8),
+    0 0 20px rgba(255, 107, 0, 0.3);
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -711,7 +715,11 @@ body {
 .btn-primary-orange {
   width: 100%;
   height: 46px;
-  background: linear-gradient(135deg, var(--orange-primary), var(--orange-bright));
+  background: linear-gradient(
+    135deg,
+    var(--orange-primary),
+    var(--orange-bright)
+  );
   border: none;
   border-radius: 14px;
   color: var(--text-white);
@@ -719,7 +727,9 @@ body {
   font-size: 0.95rem;
   cursor: pointer;
   box-shadow: 0 4px 15px var(--orange-glow);
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition:
+    transform 0.2s,
+    box-shadow 0.2s;
 }
 
 .btn-primary-orange:hover {
@@ -792,7 +802,7 @@ body {
   right: 0;
   bottom: 0;
   background-color: #3a3a3c;
-  transition: .3s;
+  transition: 0.3s;
   border-radius: 26px;
 }
 
@@ -804,16 +814,16 @@ body {
   left: 3px;
   bottom: 3px;
   background-color: white;
-  transition: .3s;
+  transition: 0.3s;
   border-radius: 50%;
 }
 
-input:checked+.slider {
+input:checked + .slider {
   background-color: var(--orange-bright);
   box-shadow: 0 0 10px var(--orange-glow);
 }
 
-input:checked+.slider:before {
+input:checked + .slider:before {
   transform: translateX(20px);
 }
 
@@ -859,19 +869,27 @@ input:checked+.slider:before {
 }
 
 .nav-icon svg {
-  transition: transform 0.3s ease, filter 0.3s ease;
+  transition:
+    transform 0.3s ease,
+    filter 0.3s ease;
 }
 
 .nav-label {
   font-size: 0.75rem;
   font-weight: 500;
-  transition: color 0.3s ease, font-weight 0.3s ease;
+  transition:
+    color 0.3s ease,
+    font-weight 0.3s ease;
 }
 
 /* OPÇÃO SELECIONADA - SOMBRA LARANJA INTENSA */
 .nav-item.active {
   color: var(--orange-bright);
-  background: radial-gradient(circle at bottom, rgba(255, 107, 0, 0.2) 0%, transparent 70%);
+  background: radial-gradient(
+    circle at bottom,
+    rgba(255, 107, 0, 0.2) 0%,
+    transparent 70%
+  );
   /* REQUISITO: Sombra laranja na opção selecionada */
   box-shadow:
     0 -6px 20px rgba(255, 107, 0, 0.8),
