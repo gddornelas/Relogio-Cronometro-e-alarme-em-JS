@@ -7,7 +7,9 @@
     "start": "node server.js",
     "dev": "npx vercel dev",
     "lint:check": "prettier --check .",
-    "lint:fix": "prettier --write ."
+    "lint:fix": "prettier --write .",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "dependencies": {
     "cors": "^2.8.5",
