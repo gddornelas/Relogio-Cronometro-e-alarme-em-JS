@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 // Banco de dados simples persistente em arquivo ou fallback em memória
-const DATA_FILE = path.join(__dirname, "data.json");
+const DATA_FILE = path.join(process.env.VERCEL ? "/tmp" : __dirname, "data.json");
 
 let db = {
   alarms: [
@@ -156,9 +156,13 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "public", "index.html"));
 });
 
-app.listen(PORT, () => {
-  console.log(`===================================================`);
-  console.log(` Servidor Relógio Digital em execução na porta ${PORT}`);
-  console.log(` Acesse: http://localhost:${PORT}`);
-  console.log(`===================================================`);
-});
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`===================================================`);
+    console.log(` Servidor Relógio Digital em execução na porta ${PORT}`);
+    console.log(` Acesse: http://localhost:${PORT}`);
+    console.log(`===================================================`);
+  });
+}
+
+module.exports = app;
